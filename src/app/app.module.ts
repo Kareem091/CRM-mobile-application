@@ -14,6 +14,13 @@ import { LoginPage } from "../pages/login/login";
 import { RegisterPage } from "../pages/register/register";
 import { NotificationsPage } from '../pages/notifications/notifications';
 import { IonicStorageModule } from '@ionic/storage';
+import { Facebook } from '@ionic-native/facebook';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireModule } from 'angularfire2';
+//import { FIREBASE_CREDENTIALS } from "./firebase.credentials";
+import { environment } from '../environments/environment';
+import { IonicPageModule } from 'ionic-angular/module';
 
 @NgModule({
   declarations: [
@@ -24,12 +31,13 @@ import { IonicStorageModule } from '@ionic/storage';
     NotificationsPage,
     RegisterPage,
     LoginPage,
-    NotificationsPage,
     TabsPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
     IonicModule.forRoot(MyApp, {
       scrollPadding: false,
       scrollAssist: true,
@@ -54,6 +62,7 @@ import { IonicStorageModule } from '@ionic/storage';
     StatusBar,
     SplashScreen,
     Keyboard,
+    Facebook,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

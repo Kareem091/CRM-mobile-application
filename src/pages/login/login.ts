@@ -1,27 +1,38 @@
-import {Component} from "@angular/core";
-import {NavController, AlertController, ToastController, MenuController} from "ionic-angular";
-import {HomePage} from "../home/home";
-import {RegisterPage} from "../register/register";
+import { Component } from "@angular/core";
+import { NavController, AlertController, ToastController, MenuController, IonicPage } from "ionic-angular";
+import { HomePage } from "../home/home";
+import { RegisterPage } from "../register/register";
 import { TabsPage } from "../tabs/tabs";
+import { User } from "../../entities/user";
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
 export class LoginPage {
+  user = {} as User;
 
-  constructor(public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController) {
+  constructor(private afAuth: AngularFireAuth, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController) {
     this.menu.swipeEnable(false);
   }
 
-  // go to register page
-  register() {
-    this.nav.setRoot(RegisterPage);
+  // login and go to home page
+  async login(user: User) {
+    try {
+      const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
+      if (result) {
+        this.nav.setRoot(TabsPage);
+      }
+    }
+    catch (e) {
+      console.error(e);
+    }
   }
 
-  // login and go to home page
-  login() {
-    this.nav.setRoot(TabsPage);
+  // go to register page
+  async register() {
+    this.nav.setRoot(RegisterPage);
   }
 
   forgotPass() {

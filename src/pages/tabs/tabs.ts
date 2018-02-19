@@ -4,6 +4,7 @@ import { AboutPage } from '../about/about';
 import { ContactPage } from '../contact/contact';
 import { HomePage } from '../home/home';
 import { RegisterPage } from '../register/register';
+import { IonicPage } from 'ionic-angular/navigation/ionic-page';
 
 @Component({
   templateUrl: 'tabs.html'
