@@ -21,6 +21,7 @@ import { AngularFireModule } from 'angularfire2';
 //import { FIREBASE_CREDENTIALS } from "./firebase.credentials";
 import { environment } from '../environments/environment';
 import { IonicPageModule } from 'ionic-angular/module';
+import { LoginPageModule } from '../pages/login/login.module';
 
 @NgModule({
   declarations: [
@@ -52,10 +53,10 @@ import { IonicPageModule } from 'ionic-angular/module';
     MyApp,
     AboutPage,
     ContactPage,
-    LoginPage,
     HomePage,
     RegisterPage,
     NotificationsPage,
+    LoginPage,
     TabsPage
   ],
   providers: [

@@ -6,7 +6,7 @@ import { TabsPage } from "../tabs/tabs";
 import { IonicPage } from "ionic-angular/navigation/ionic-page";
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from "../../entities/user";
-
+@IonicPage()
 @Component({
   selector: 'page-register',
   templateUrl: 'register.html'
@@ -21,7 +21,7 @@ export class RegisterPage {
   async register(user: User) {
     try {
       const result = await this.afAuth.auth.createUserWithEmailAndPassword(
-        user.email,
+        user.mail,
         user.password
       );
       if (result) {
