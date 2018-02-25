@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class UserService {
-    private _url = 'https://crmapplication-all.herokuapp.com/api';
+    private _url = 'https://crmapplication-all.herokuapp.com/api/user/all';
     constructor(private http: Http) { }
 
    
@@ -20,13 +20,8 @@ export class UserService {
     }
 
     getUsers(){
-    var headers = new Headers();
-    headers.append('Access-Control-Allow-Origin' , '*');
-    headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
-    headers.append('Accept','application/json');
-    headers.append('content-type','application/json');
-     let options = new RequestOptions({ headers:headers,withCredentials: true});
-        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json',options)
+    
+        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json')
         .map((res:Response) => res.json());
     }
   

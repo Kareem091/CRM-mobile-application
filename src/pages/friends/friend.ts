@@ -28,14 +28,24 @@ export class FriendsPage  implements OnInit {
   }
 
   getUsers() {
-      this.userServ.getUsers().subscribe(
-        // the first argument is a function which runs on success
-        data => { this.users = data},
-        // the second argument is a function which runs on error
-        err => console.error(err),
-        // the third argument is a function which runs on completion
-        () => console.log('done loading foods')
-      );
+
+    // make variable that create the component
+    let loader = this.loadingController.create({
+      content: 'Loading tournaments...'
+      //spinner: 'dots'
+    });
+
+      loader.present().then(() => {
+        // and then() call api service to fetch data
+        this.userServ.getUsers().subscribe(data => {
+          // set the fetched data
+          this.users = data;
+          console.log(this.users.photoURL);
+          // close the loading component
+          loader.dismiss();
+        });
+      });
+      
     }
 
   }

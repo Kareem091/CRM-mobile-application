@@ -330,7 +330,7 @@ var FriendsPage = (function () {
     };
     FriendsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Contact\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let country of countries">\n          <ion-item>\n            <ion-card>\n                <img [src]="urlImg" (click)="show()" />\n                <ion-fab right bottom>\n                    <button ion-fab (click)="edit()">\n                    <ion-icon name="brush"></ion-icon>\n                  </button>\n                  </ion-fab>\n                  <div class="card-title">Amsterdam</div>\n            </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
+            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Contact\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let user of users">\n          <ion-item>\n            <ion-card>\n                <img [src]="user.photoURL" (click)="show()" />\n                <ion-fab right bottom>\n                    <button ion-fab (click)="edit()">\n                    <ion-icon name="brush"></ion-icon>\n                  </button>\n                  </ion-fab>\n                  <div class="card-title">Amsterdam</div>\n            </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
             __WEBPACK_IMPORTED_MODULE_2__api_userService__["a" /* UserService */],
@@ -370,7 +370,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var UserService = (function () {
     function UserService(http) {
         this.http = http;
-        this._url = 'https://crmapplication-all.herokuapp.com/api';
+        this._url = 'https://crmapplication-all.herokuapp.com/api/user/all';
     }
     UserService.prototype.getUser = function (id) {
         return this.http.get(this._url + "/" + id);
@@ -379,13 +379,7 @@ var UserService = (function () {
         return this.http.put("" + this._url + "/new", user);
     };
     UserService.prototype.getUsers = function () {
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
-        headers.append('Access-Control-Allow-Origin', '*');
-        headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
-        headers.append('Accept', 'application/json');
-        headers.append('content-type', 'application/json');
-        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers, withCredentials: true });
-        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json', options)
+        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json')
             .map(function (res) { return res.json(); });
     };
     UserService.prototype.updateUser = function (id, user) {
@@ -393,7 +387,7 @@ var UserService = (function () {
     };
     UserService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
     ], UserService);
     return UserService;
 }());
@@ -494,7 +488,7 @@ var AppModule = (function () {
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["a" /* BrowserModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_http__["c" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_23__angular_forms__["a" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_18_angularfire2__["a" /* AngularFireModule */].initializeApp(__WEBPACK_IMPORTED_MODULE_19__environments_environment__["a" /* environment */].firebase),
                 __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__["b" /* AngularFireAuthModule */],

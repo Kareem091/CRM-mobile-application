@@ -8,10 +8,10 @@
 
 <ion-content>
     <ion-list>
-        <ion-item-sliding *ngFor="let country of countries">
+        <ion-item-sliding *ngFor="let user of users">
           <ion-item>
             <ion-card>
-                <img [src]="urlImg" (click)="show()" />
+                <img [src]="user.photoURL" (click)="show()" />
                 <ion-fab right bottom>
                     <button ion-fab (click)="edit()">
                     <ion-icon name="brush"></ion-icon>
