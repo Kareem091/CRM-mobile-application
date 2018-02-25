@@ -12,7 +12,6 @@ import { Facebook } from '@ionic-native/facebook'
   templateUrl: 'app.html'
 })
 export class MyApp {
-  isLoggedIn:boolean = false;
 
  //rootPage:any = TabsPage;
   @ViewChild(Nav) nav: Nav;
@@ -22,8 +21,8 @@ export class MyApp {
      platform: Platform,
      statusBar: StatusBar, 
      splashScreen: SplashScreen, 
-     
-     keyboard: Keyboard, private facebook: Facebook
+     keyboard: Keyboard, 
+     private facebook: Facebook,
      ) 
      {
     platform.ready().then(() => {
