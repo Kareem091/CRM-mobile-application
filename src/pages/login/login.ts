@@ -7,6 +7,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook'
 //import firebase from 'firebase';
 import * as firebase from 'firebase/app';
+import { auth } from "firebase/app";
 
 @IonicPage()
 @Component({
@@ -15,6 +16,7 @@ import * as firebase from 'firebase/app';
 })
 export class LoginPage {
 
+  loggedIn:boolean = false;
   user = {} as User;
 
   constructor(
@@ -30,27 +32,36 @@ export class LoginPage {
      this.menu.swipeEnable(false);
      }
 
-       // login with facebook and go to home page
-
+     // login with facebook and go to home page
      facebookLogin() {
       if (this.platform.is('cordova')) {
+        console.log('ifffffff');
         return this.facebook.login(['email', 'public_profile']).then(res => {
           const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
-          return firebase.auth().signInWithCredential(facebookCredential);
+          const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
+          console.log(facenbookInfo);
+          this.nav.setRoot(TabsPage);
         })
       }
       else {
+        console.log('elseeeee');
         return this.afAuth.auth
           .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-          .then(res => console.log(res));
+          .then(res => {
+            this.nav.push(TabsPage)});
       }
+      
     }
   
+    
+   
+
 
   // login with email and go to home page
   async login(user:User) {
     try {
       const result = await this.afAuth.auth.signInWithEmailAndPassword(user.mail, user.password);
+      
       if (result) {
         this.nav.setRoot(TabsPage);
       }
@@ -66,6 +77,7 @@ export class LoginPage {
     this.nav.setRoot(RegisterPage);
   }
 
+  
   forgotPass() {
     /*let forgot = this.forgotCtrl.create({
       title: 'Forgot Password?',

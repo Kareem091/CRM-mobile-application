@@ -6,11 +6,13 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { TabsPage } from '../pages/tabs/tabs';
 import { HomePage } from "../pages/home/home";
 import { LoginPage } from "../pages/login/login";
+import { Facebook } from '@ionic-native/facebook'
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
+  isLoggedIn:boolean = false;
 
  //rootPage:any = TabsPage;
   @ViewChild(Nav) nav: Nav;
@@ -20,7 +22,8 @@ export class MyApp {
      platform: Platform,
      statusBar: StatusBar, 
      splashScreen: SplashScreen, 
-     keyboard: Keyboard
+     
+     keyboard: Keyboard, private facebook: Facebook
      ) 
      {
     platform.ready().then(() => {
@@ -38,7 +41,12 @@ export class MyApp {
   }
 
   goHome(){
-    this.nav.push(HomePage);
+    this.nav.push(TabsPage);
+  }
+
+  logout() {
+    this.facebook.logout();
+      this.nav.push(TabsPage);
   }
 
 

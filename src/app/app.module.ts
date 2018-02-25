@@ -33,6 +33,7 @@ import { LoginPageModule } from '../pages/login/login.module';
     RegisterPage,
     LoginPage,
     TabsPage
+    
   ],
   imports: [
     BrowserModule,

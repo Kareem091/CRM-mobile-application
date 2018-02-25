@@ -10,10 +10,18 @@
     </ion-toolbar>
   </ion-header>
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
+  <h2>{{ info?.displayName }}</h2>
+  <h2>Welcome to Kiki entertainment App!</h2>
   
-<p>Currenty, You are not following any teams</p>
-<p>First go to Tournamanets, and choice the team you wants to follow.</p>
-<button ion-button round (click)= "goToGallery()" >Gallery</button>
+<p>Currently, this app is underdevelopment</p>
+<p>we are very happy to join us, just login and we will sent you notification once we are done</p>
+
+<ion-card *ngIf="info">
+  <ion-card-header>{{ info?.displayName }}</ion-card-header>
+  <img style="width:500px;height:600px;" [src]="info?.photoURL" />
+  <ion-card-content>
+    <p>Email: {{ info?.email }}</p>
+  </ion-card-content>
+</ion-card>
 
 </ion-content>
