@@ -31,10 +31,9 @@ export class FriendsPage  implements OnInit {
 
     // make variable that create the component
     let loader = this.loadingController.create({
-      content: 'Loading tournaments...'
+      content: 'Loading Friends...'
       //spinner: 'dots'
     });
-
       loader.present().then(() => {
         // and then() call api service to fetch data
         this.userServ.getUsers().subscribe(data => {

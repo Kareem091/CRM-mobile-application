@@ -320,23 +320,30 @@ var FriendsPage = (function () {
     };
     FriendsPage.prototype.getUsers = function () {
         var _this = this;
-        this.userServ.getUsers().subscribe(
-        // the first argument is a function which runs on success
-        function (data) { _this.users = data; }, 
-        // the second argument is a function which runs on error
-        function (err) { return console.error(err); }, 
-        // the third argument is a function which runs on completion
-        function () { return console.log('done loading foods'); });
+        // make variable that create the component
+        var loader = this.loadingController.create({
+            content: 'Loading Friends...'
+            //spinner: 'dots'
+        });
+        loader.present().then(function () {
+            // and then() call api service to fetch data
+            _this.userServ.getUsers().subscribe(function (data) {
+                // set the fetched data
+                _this.users = data;
+                console.log(_this.users.photoURL);
+                // close the loading component
+                loader.dismiss();
+            });
+        });
     };
     FriendsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Contact\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let user of users">\n          <ion-item>\n            <ion-card>\n                <img [src]="user.photoURL" (click)="show()" />\n                <ion-fab right bottom>\n                    <button ion-fab (click)="edit()">\n                    <ion-icon name="brush"></ion-icon>\n                  </button>\n                  </ion-fab>\n                  <div class="card-title">Amsterdam</div>\n            </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
+            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Contact\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let user of users">\n          <ion-item> \n              <ion-card>\n                <ion-item>\n                  <ion-avatar item-start>\n                    <img [src]="user.photoURL">\n\n                  </ion-avatar>\n                  <h2>{{user.displayName}}</h2>\n                  <p>{{user.nickName}}</p>\n                </ion-item>\n                <img src="https://i.ytimg.com/vi/RqRNd4UyA4c/maxresdefault.jpg" />\n                <ion-card-content>\n                  <ion-card-title>\n                      <p>{{user.nickName}}</p> is a {{user.about}} \n                  </ion-card-title>\n                  <p>\n                    \n                  </p>\n                </ion-card-content>\n                <ion-row>\n                  <ion-col>\n                    <button ion-button icon-left clear small>\n                    <ion-icon name="thumbs-up"></ion-icon>\n                    <div>54 Likes</div>\n                  </button>\n                  </ion-col>\n                  <ion-col>\n                    <button ion-button icon-left clear small>\n                    <ion-icon name="text"></ion-icon>\n                    <div>40 Comments</div>\n                  </button>\n                  </ion-col>\n                </ion-row>\n              </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_2__api_userService__["a" /* UserService */],
-            __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_loading_loading_controller__["a" /* LoadingController */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__api_userService__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_userService__["a" /* UserService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_loading_loading_controller__["a" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_loading_loading_controller__["a" /* LoadingController */]) === "function" && _c || Object])
     ], FriendsPage);
     return FriendsPage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=friend.js.map

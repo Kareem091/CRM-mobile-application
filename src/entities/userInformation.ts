@@ -10,5 +10,6 @@ export interface UserInformation{
         userType:String;
         providerId:String;
         uid:String;
+        
       
 }

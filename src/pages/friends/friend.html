@@ -9,16 +9,40 @@
 <ion-content>
     <ion-list>
         <ion-item-sliding *ngFor="let user of users">
-          <ion-item>
-            <ion-card>
-                <img [src]="user.photoURL" (click)="show()" />
-                <ion-fab right bottom>
-                    <button ion-fab (click)="edit()">
-                    <ion-icon name="brush"></ion-icon>
+          <ion-item> 
+              <ion-card>
+                <ion-item>
+                  <ion-avatar item-start>
+                    <img [src]="user.photoURL">
+
+                  </ion-avatar>
+                  <h2>{{user.displayName}}</h2>
+                  <p>{{user.nickName}}</p>
+                </ion-item>
+                <img src="https://i.ytimg.com/vi/RqRNd4UyA4c/maxresdefault.jpg" />
+                <ion-card-content>
+                  <ion-card-title>
+                      <p>{{user.nickName}}</p> is a {{user.about}} 
+                  </ion-card-title>
+                  <p>
+                    
+                  </p>
+                </ion-card-content>
+                <ion-row>
+                  <ion-col>
+                    <button ion-button icon-left clear small>
+                    <ion-icon name="thumbs-up"></ion-icon>
+                    <div>54 Likes</div>
                   </button>
-                  </ion-fab>
-                  <div class="card-title">Amsterdam</div>
-            </ion-card>
+                  </ion-col>
+                  <ion-col>
+                    <button ion-button icon-left clear small>
+                    <ion-icon name="text"></ion-icon>
+                    <div>40 Comments</div>
+                  </button>
+                  </ion-col>
+                </ion-row>
+              </ion-card>
           </ion-item>
         </ion-item-sliding>
       </ion-list>
