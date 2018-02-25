@@ -6,14 +6,15 @@ import { UserData } from '../../entities/userData';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import * as firebase from 'firebase/app';
 import { UserInfo } from '@firebase/auth-types';
+//import { UserService } from '../../api/userService';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  
-  info : any;
+
+  info : UserData;
   constructor(public navCtrl: NavController,public navParam: NavParams) {
 
   }
@@ -36,4 +37,5 @@ export class HomePage {
     this.navCtrl.push(NotificationsPage);
   }
 
+  
 }

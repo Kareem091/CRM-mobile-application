@@ -18,26 +18,32 @@ import { Facebook } from '@ionic-native/facebook';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
-//import { FIREBASE_CREDENTIALS } from "./firebase.credentials";
 import { environment } from '../environments/environment';
 import { IonicPageModule } from 'ionic-angular/module';
 import { LoginPageModule } from '../pages/login/login.module';
+import { UserService } from '../api/userService';
+import { GallaryPage } from '../pages/gallary/gallary';
+import { FriendsPage } from '../pages/friends/friend';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     MyApp,
     AboutPage,
     ContactPage,
+    GallaryPage,
     HomePage,
     NotificationsPage,
     RegisterPage,
     LoginPage,
+    FriendsPage,
     TabsPage
     
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     IonicModule.forRoot(MyApp, {
@@ -55,7 +61,9 @@ import { LoginPageModule } from '../pages/login/login.module';
     AboutPage,
     ContactPage,
     HomePage,
+    GallaryPage,
     RegisterPage,
+    FriendsPage,
     NotificationsPage,
     LoginPage,
     TabsPage
@@ -65,6 +73,7 @@ import { LoginPageModule } from '../pages/login/login.module';
     SplashScreen,
     Keyboard,
     Facebook,
+    UserService,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

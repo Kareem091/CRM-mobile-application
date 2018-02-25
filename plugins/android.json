@@ -1,0 +1,32 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-facebook4": {
+      "APP_ID": "154746568495793",
+      "APP_NAME": "crm-mobile-app",
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    },
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    },
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "com.inSpace.crm.facebook091"
+    }
+  },
+  "dependent_plugins": {}
+}

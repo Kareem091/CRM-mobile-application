@@ -85,4 +85,5 @@
         <variable name="APP_ID" value="154746568495793" />
         <variable name="APP_NAME" value="crm-mobile-app" />
     </plugin>
+    <engine name="android" spec="7.0.0" />
 </widget>

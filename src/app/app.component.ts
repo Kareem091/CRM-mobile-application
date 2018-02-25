@@ -46,7 +46,7 @@ export class MyApp {
 
   logout() {
     this.facebook.logout();
-      this.nav.push(TabsPage);
+      this.nav.push(LoginPage);
   }
 
 

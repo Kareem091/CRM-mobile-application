@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Contact
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item-sliding *ngFor="let country of countries">
+          <ion-item>
+            <ion-card>
+                <img [src]="urlImg" (click)="show()" />
+                <ion-fab right bottom>
+                    <button ion-fab (click)="edit()">
+                    <ion-icon name="brush"></ion-icon>
+                  </button>
+                  </ion-fab>
+                  <div class="card-title">Amsterdam</div>
+            </ion-card>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-list>
+</ion-content>
