@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { NavController, AlertController, ToastController, MenuController, IonicPage ,Platform } from "ionic-angular";
+import { NavController, AlertController, ToastController, MenuController, IonicPage, Platform } from "ionic-angular";
 import { RegisterPage } from "../register/register";
 import { TabsPage } from "../tabs/tabs";
 import { User } from "../../entities/user";
@@ -8,6 +8,8 @@ import { Facebook } from '@ionic-native/facebook'
 //import firebase from 'firebase';
 import * as firebase from 'firebase/app';
 import { auth } from "firebase/app";
+import { UserInformation } from "../../entities/userInformation";
+import { UserService } from "../../api/userService";
 
 @IonicPage()
 @Component({
@@ -16,59 +18,57 @@ import { auth } from "firebase/app";
 })
 export class LoginPage {
 
-  loggedIn:boolean = false;
-  user = {} as User;
+  loggedIn: boolean = false;
+  user = {} as UserInformation;
 
   constructor(
-     public facebook: Facebook,
-     private alertCtrl: AlertController,
-     private afAuth: AngularFireAuth,
-     public nav: NavController, 
-     public forgotCtrl: AlertController, 
-     public menu: MenuController, 
-     private platform: Platform,
-     public toastCtrl: ToastController) 
-     {
-     this.menu.swipeEnable(false);
-     }
+    public facebook: Facebook,
+    private alertCtrl: AlertController,
+    private failMsgCtrl: AlertController,
+    private afAuth: AngularFireAuth,
+    public nav: NavController,
+    public forgotCtrl: AlertController,
+    public menu: MenuController,
+    private userServ: UserService,
+    private platform: Platform,
+    public toastCtrl: ToastController) {
+    this.menu.swipeEnable(false);
+  }
 
-     // login with facebook and go to home page
-     facebookLogin() {
-      if (this.platform.is('cordova')) {
-        console.log('ifffffff');
-        return this.facebook.login(['email', 'public_profile']).then(res => {
-          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
-          const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
-          console.log(facenbookInfo);
-          this.nav.setRoot(TabsPage);
-        })
-      }
-      else {
-        console.log('elseeeee');
-        return this.afAuth.auth
-          .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-          .then(res => {
-            this.nav.push(TabsPage)});
-      }
-      
+  // login with facebook and go to home page
+  facebookLogin() {
+    if (this.platform.is('cordova')) {
+      return this.facebook.login(['email', 'public_profile']).then(res => {
+        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
+        const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
+        console.log(facenbookInfo);
+        this.nav.setRoot(TabsPage);
+      })
     }
-  
-    
-   
+    else {
+      return this.afAuth.auth
+        .signInWithPopup(new firebase.auth.FacebookAuthProvider())
+        .then(res => {
+          this.nav.push(TabsPage)
+        });
+    }
+  }
 
+
+
+  
 
   // login with email and go to home page
-  async login(user:User) {
+  async login(user: UserInformation) {
     try {
-      const result = await this.afAuth.auth.signInWithEmailAndPassword(user.mail, user.password);
-      
+      const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       if (result) {
         this.nav.setRoot(TabsPage);
       }
     }
     catch (e) {
-      this.nav.setRoot(RegisterPage);
       console.error(e);
+      this.presentFailMsg(e);
     }
   }
 
@@ -77,9 +77,9 @@ export class LoginPage {
     this.nav.setRoot(RegisterPage);
   }
 
-  
+
   forgotPass() {
-    /*let forgot = this.forgotCtrl.create({
+    let forgot = this.forgotCtrl.create({
       title: 'Forgot Password?',
       message: "Enter you email address to send a reset link password.",
       inputs: [
@@ -99,21 +99,37 @@ export class LoginPage {
         {
           text: 'Send',
           handler: data => {
-            console.log('Send clicked');
-            let toast = this.toastCtrl.create({
-              message: 'Email was sended successfully',
-              duration: 3000,
-              position: 'top',
-              cssClass: 'dark-trans',
-              closeButtonText: 'OK',
-              showCloseButton: true
-            });
-            toast.present();
+            var auth = firebase.auth();
+            var userEmail = data.email;
+            console.log("---------- userEmail" + userEmail);
+            auth.sendPasswordResetEmail(userEmail).then(function () {
+              console.log("email sent");
+              console.log('Send clicked');
+              let toast = this.toastCtrl.create({
+                message: 'Email was sended successfully',
+                duration: 3000,
+                position: 'top',
+                cssClass: 'dark-trans',
+                closeButtonText: 'OK',
+                showCloseButton: true
+              });
+              toast.present();
+            }).catch( (error) => this.presentFailMsg(error) );
           }
         }
       ]
     });
-    forgot.present(); */
+    forgot.present();
+
   }
 
+  presentFailMsg(msg: string) {
+    let alert = this.failMsgCtrl.create({
+      title: 'Email Not Found',
+      subTitle: msg,
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
+  
 }

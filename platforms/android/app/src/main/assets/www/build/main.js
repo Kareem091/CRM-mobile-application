@@ -1,15 +1,20 @@
 webpackJsonp([2],{
 
-/***/ 158:
+/***/ 160:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__api_userService__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase_app__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_firebase_app__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ionic_angular_platform_platform__ = __webpack_require__(5);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -59,11 +64,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
+
+
+
+
 var RegisterPage = (function () {
-    function RegisterPage(afAuth, nav, navParams) {
+    function RegisterPage(platform, facebook, afAuth, nav, navParams, userServ) {
+        this.platform = platform;
+        this.facebook = facebook;
         this.afAuth = afAuth;
         this.nav = nav;
         this.navParams = navParams;
+        this.userServ = userServ;
         this.user = {};
     }
     // register and go to home page
@@ -90,15 +102,37 @@ var RegisterPage = (function () {
             });
         });
     };
+    // login with facebook and go to home page
+    RegisterPage.prototype.facebookLogin = function () {
+        var _this = this;
+        if (this.platform.is('cordova')) {
+            return this.facebook.login(['email', 'public_profile']).then(function (res) {
+                var facebookCredential = __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"].FacebookAuthProvider.credential(res.authResponse.accessToken);
+                var facenbookInfo = __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"]().signInWithCredential(facebookCredential);
+                console.log(facenbookInfo);
+                _this.nav.setRoot(__WEBPACK_IMPORTED_MODULE_3__tabs_tabs__["a" /* TabsPage */]);
+            });
+        }
+        else {
+            return this.afAuth.auth
+                .signInWithPopup(new __WEBPACK_IMPORTED_MODULE_7_firebase_app__["auth"].FacebookAuthProvider())
+                .then(function (res) {
+                _this.nav.push(__WEBPACK_IMPORTED_MODULE_3__tabs_tabs__["a" /* TabsPage */]);
+            });
+        }
+    };
     // go to login page
     RegisterPage.prototype.login = function () {
         this.nav.setRoot(__WEBPACK_IMPORTED_MODULE_2__login_login__["a" /* LoginPage */]);
     };
     RegisterPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-register',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\register\register.html"*/'<!-- -->\n<ion-content class="auth-page">\n  <div class="login-content">\n\n    <!-- Logo -->\n    <div padding text-center>\n      <div class="logo"></div>\n      <h2 ion-text class="text-primary">\n        <strong>Ionic 3</strong> Start Theme\n      </h2>\n    </div>\n\n    <!-- Login form -->\n    <form class="list-form">\n      \n      <ion-item>\n        <ion-label floating>\n          <ion-icon name="mail" item-start class="text-primary"></ion-icon>\n          Email\n        </ion-label>\n        <ion-input type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}"></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label floating>\n          <ion-icon name="lock" item-start class="text-primary"></ion-icon>\n          Password\n        </ion-label>\n        <ion-input type="password" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}"></ion-input>\n      </ion-item>\n    </form>\n\n    <div margin-top>\n      <button ion-button block color="dark" tappable (click)="register(user)">\n        SIGN UP\n      </button>\n\n      <p text-center ion-text color="secondary">Or Sign Up with:</p>\n\n      <ion-grid>\n        <ion-row>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-facebook">\n              <ion-icon name="logo-facebook"></ion-icon>\n            </button>\n          </ion-col>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-twitter">\n              <ion-icon name="logo-twitter"></ion-icon>\n            </button>\n          </ion-col>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-gplus">\n              <ion-icon name="logo-googleplus"></ion-icon>\n            </button>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n    </div>\n\n    <!-- Other links -->\n    <div text-center margin-top>\n      <span ion-text color="primary" tappable (click)="login()">I have an account</span>\n    </div>\n\n  </div>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\register\register.html"*/
+            selector: 'page-register',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\register\register.html"*/'<!-- -->\n<ion-content class="auth-page">\n  <div class="login-content" style="width: 250px;">\n\n    <!-- Logo -->\n    <div padding-horizontal text-center class="animated fadeInDown">\n      <div class="frndz"></div>\n      Sign up to see photos and videos from your friends.\n    </div>\n\n    <div>\n      <button ion-button icon-only block color="blue" style="text-transform: none;" (click)="facebookLogin()">\n        <ion-icon name="logo-facebook"></ion-icon>Log in with Faceboook\n      </button>\n\n    </div>\n\n    <div>\n      <p text-center ion-text color="dynamicColor">Or</p>\n    </div>\n    <!-- Login form -->\n\n    <div>\n      <form class="list-form">\n        <ion-item>\n          <ion-label floating>\n            <!-- <ion-icon name="mail" item-start class="text-primary"></ion-icon>-->\n            Email\n          </ion-label>\n          <ion-input class="form-label-group" type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label floating>\n            <!-- <ion-icon name="mail" item-start class="text-primary"></ion-icon>-->\n            Full Name\n          </ion-label>\n          <ion-input type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}"></ion-input>\n        </ion-item>\n\n        <ion-item>\n          <ion-label floating>\n            <!-- <ion-icon name="mail" item-start class="text-primary"></ion-icon>-->\n            Display Name\n          </ion-label>\n          <ion-input type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}"></ion-input>\n        </ion-item>\n\n        <ion-item>\n          <ion-label floating>\n            <!-- <ion-icon name="lock" item-start class="text-primary" ></ion-icon>-->\n            Password\n          </ion-label>\n          <ion-input type="password" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}"></ion-input>\n\n        </ion-item>\n      </form>\n    </div>\n    <div margin-top>\n      <button ion-button icon-start block color="blue" style="text-transform: none;" tappable (click)="register(user)">\n\n        SIGN UP\n      </button>\n    </div>\n\n    <div class="col-md-4 col-md-offset-4">By signing up, you agree to our Terms & Privacy Policy</div>\n    <!-- Other links -->\n    <div text-center margin-top>\n      <span ion-text color="primary" tappable (click)="login()">I have an account</span>\n    </div>\n\n  </div>\n</ion-content>'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\register\register.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__["a" /* AngularFireAuth */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_8_ionic_angular_platform_platform__["a" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */],
+            __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__["a" /* AngularFireAuth */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_5__api_userService__["a" /* UserService */]])
     ], RegisterPage);
     return RegisterPage;
 }());
@@ -107,7 +141,7 @@ var RegisterPage = (function () {
 
 /***/ }),
 
-/***/ 171:
+/***/ 173:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -120,20 +154,20 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 171;
+webpackEmptyAsyncContext.id = 173;
 
 /***/ }),
 
-/***/ 215:
+/***/ 217:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"../pages/login/login.module": [
-		722,
+		723,
 		1
 	],
 	"../pages/register/register.module": [
-		723,
+		722,
 		0
 	]
 };
@@ -148,12 +182,12 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-webpackAsyncContext.id = 215;
+webpackAsyncContext.id = 217;
 module.exports = webpackAsyncContext;
 
 /***/ }),
 
-/***/ 216:
+/***/ 218:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -188,17 +222,17 @@ var AboutPage = (function () {
 
 /***/ }),
 
-/***/ 217:
+/***/ 219:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notifications_notifications__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_firebase_app__ = __webpack_require__(219);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_firebase_app__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase_app__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_firebase_app__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__api_userService__ = __webpack_require__(72);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -213,34 +247,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-//import { UserService } from '../../api/userService';
 var HomePage = (function () {
-    function HomePage(navCtrl, navParam) {
+    function HomePage(navCtrl, navParam, userServ) {
         this.navCtrl = navCtrl;
         this.navParam = navParam;
+        this.userServ = userServ;
+        //fullPhoto = {} as String;
+        this.info = {};
+        this.userinfo = {};
     }
+    HomePage.prototype.updateUserInfo = function (userInfo) {
+        this.userServ.updateUser(userInfo).subscribe(function (data) { console.log(data); }, function (error) { return console.log(error); });
+    };
     HomePage.prototype.ionViewDidLoad = function () {
-        var user = __WEBPACK_IMPORTED_MODULE_4_firebase_app__["auth"]().currentUser;
+        var user = __WEBPACK_IMPORTED_MODULE_3_firebase_app__["auth"]().currentUser;
         if (user != null) {
+            var profileInfo = {};
+            console.log("---user.uid; " + user.providerData);
             user.providerData.forEach(function (profile) {
                 console.log("  Sign-in provider: " + profile.providerId);
                 console.log("  Provider-specific UID: " + profile.uid);
                 console.log("  Name: " + profile.displayName);
                 console.log("  Email: " + profile.email);
+                console.log("  phone Number: " + profile.phoneNumber);
                 console.log("  Photo URL: " + profile.photoURL);
+                profileInfo = profile;
+                console.log(profileInfo.uid + "-----");
             });
-            this.info = user;
+            this.info = profileInfo;
+            this.transformUserData(this.info);
         }
-        console.log('.......' + this.info.displayName);
     };
-    HomePage.prototype.goToGallery = function () {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__notifications_notifications__["a" /* NotificationsPage */]);
+    HomePage.prototype.transformUserData = function (infoUI) {
+        this.userinfo.displayName = infoUI.displayName;
+        this.userinfo.email = infoUI.email;
+        this.userinfo.photoURL = infoUI.photoURL;
+        this.userinfo.phoneNumber = infoUI.phoneNumber;
+        this.userinfo.providerId = infoUI.providerId;
+        this.userinfo.uid = infoUI.uid;
+        this.userinfo.fullPhoto = "https://graph.facebook.com/" + infoUI.uid + "/picture?width=1024&height=1024";
+        //this.updateUserInfo(this.userinfo);
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\home\home.html"*/'<ion-header>\n    <ion-navbar color="primary">\n      <button menuToggle>\n        <ion-icon name="menu"></ion-icon>\n      </button>\n      <ion-title>M 4 A</ion-title>\n    </ion-navbar>\n    <ion-toolbar color="secondary">\n      <ion-title>My Photos</ion-title>\n    </ion-toolbar>\n  </ion-header>\n<ion-content padding>\n  <h2>{{ info?.displayName }}</h2>\n  <h2>Welcome to Kiki entertainment App!</h2>\n  \n<p>Currently, this app is underdevelopment</p>\n<p>we are very happy to join us, just login and we will sent you notification once we are done</p>\n\n<ion-card *ngIf="info">\n  <ion-card-header>{{ info?.displayName }}</ion-card-header>\n  <img style="width:500px;height:600px;" [src]="info?.photoURL" />\n  <ion-card-content>\n    <p>Email: {{ info?.email }}</p>\n  </ion-card-content>\n</ion-card>\n\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\home\home.html"*/'<ion-header>\n    <ion-navbar color="">\n      <button menuToggle>\n        <ion-icon name="menu"></ion-icon>\n      </button>\n      <ion-title>Welcome</ion-title>\n    </ion-navbar>\n    <ion-toolbar color="secondary">\n      <ion-title>Home</ion-title>\n    </ion-toolbar>\n  </ion-header>\n<ion-content padding>\n  <h2>{{ userinfo?.displayName }}</h2>\n  <h2>Welcome to Kiki entertainment App!</h2>\n  \n<p>Currently, this app is underdevelopment</p>\n<p>we are very happy to join us, just login and we will sent you notification once we are done</p>\n\n<ion-card *ngIf="userinfo">\n  <ion-card-header>{{ userinfo?.displayName }}</ion-card-header>\n  <img [src]="userinfo?.fullPhoto" alt="Description"/>\n  <ion-card-content>\n    <p>Email: {{ userinfo?.email }}</p>\n    </ion-card-content>\n</ion-card>\n\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\home\home.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular_navigation_nav_params__["a" /* NavParams */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular_navigation_nav_params__["a" /* NavParams */], __WEBPACK_IMPORTED_MODULE_4__api_userService__["a" /* UserService */]])
     ], HomePage);
     return HomePage;
 }());
@@ -249,53 +301,15 @@ var HomePage = (function () {
 
 /***/ }),
 
-/***/ 218:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NotificationsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var NotificationsPage = (function () {
-    function NotificationsPage(viewCtrl) {
-        this.viewCtrl = viewCtrl;
-    }
-    NotificationsPage.prototype.close = function () {
-        this.viewCtrl.dismiss();
-    };
-    NotificationsPage = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-notifications',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\notifications\notifications.html"*/'<ion-list class="no-margin">\n  <ion-list-header class="no-margin">\n  	<ion-icon name="notifications" color="primary"></ion-icon>\n  	<span ion-text color="primary" class="bold">Notifications</span>\n  </ion-list-header>\n  <button ion-item color="secondary" class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail"></ion-icon>\n  	New booking success!\n  </button>\n  <button ion-item color="secondary" class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail"></ion-icon>\n  	Activity rescheduled\n  </button>\n  <button ion-item class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail-open" color="secondary"></ion-icon>\n  	<span ion-text color="secondary">Activity rescheduled</span>\n  </button>\n  <button ion-item class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail-open" color="secondary"></ion-icon>\n  	<span ion-text color="secondary">Activity rescheduled</span>\n  </button>\n</ion-list>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\notifications\notifications.html"*/
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ViewController */]])
-    ], NotificationsPage);
-    return NotificationsPage;
-}());
-
-//# sourceMappingURL=notifications.js.map
-
-/***/ }),
-
-/***/ 224:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FriendsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_userService__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_loading_loading_controller__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_userService__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_loading_loading_controller__ = __webpack_require__(113);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -320,17 +334,25 @@ var FriendsPage = (function () {
     };
     FriendsPage.prototype.getUsers = function () {
         var _this = this;
-        this.userServ.getUsers().subscribe(
-        // the first argument is a function which runs on success
-        function (data) { _this.users = data; }, 
-        // the second argument is a function which runs on error
-        function (err) { return console.error(err); }, 
-        // the third argument is a function which runs on completion
-        function () { return console.log('done loading foods'); });
+        // make variable that create the component
+        var loader = this.loadingController.create({
+            content: 'Loading Users...'
+            //spinner: 'dots'
+        });
+        loader.present().then(function () {
+            // and then() call api service to fetch data
+            _this.userServ.getUsers().subscribe(function (data) {
+                // set the fetched data
+                _this.users = data;
+                console.log(_this.users.photoURL);
+                // close the loading component
+                loader.dismiss();
+            });
+        });
     };
     FriendsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Contact\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let country of countries">\n          <ion-item>\n            <ion-card>\n                <img [src]="urlImg" (click)="show()" />\n                <ion-fab right bottom>\n                    <button ion-fab (click)="edit()">\n                    <ion-icon name="brush"></ion-icon>\n                  </button>\n                  </ion-fab>\n                  <div class="card-title">Amsterdam</div>\n            </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
+            selector: 'page-friend',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Users\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-item-sliding *ngFor="let user of users">\n          <ion-item> \n              <ion-card>\n                <ion-item>\n                  <ion-avatar item-start>\n                    <img [src]="user.photoURL">\n\n                  </ion-avatar>\n                  <h2>{{user.displayName}}</h2>\n                  <p>{{user.nickName}}</p>\n                </ion-item>\n                <img src="https://i.ytimg.com/vi/RqRNd4UyA4c/maxresdefault.jpg" />\n                <ion-card-content>\n                  <ion-card-title>\n                      <p>{{user.nickName}}</p> is a {{user.about}} \n                  </ion-card-title>\n                  <p>\n                    \n                  </p>\n                </ion-card-content>\n                <ion-row>\n                  <ion-col>\n                    <button ion-button icon-left clear small>\n                    <ion-icon name="thumbs-up"></ion-icon>\n                    <div>54 Likes</div>\n                  </button>\n                  </ion-col>\n                  <ion-col>\n                    <button ion-button icon-left clear small>\n                    <ion-icon name="text"></ion-icon>\n                    <div>40 Comments</div>\n                  </button>\n                  </ion-col>\n                </ion-row>\n              </ion-card>\n          </ion-item>\n        </ion-item-sliding>\n      </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\friends\friend.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
             __WEBPACK_IMPORTED_MODULE_2__api_userService__["a" /* UserService */],
@@ -343,66 +365,13 @@ var FriendsPage = (function () {
 
 /***/ }),
 
-/***/ 225:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__(412);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(267);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var UserService = (function () {
-    function UserService(http) {
-        this.http = http;
-        this._url = 'https://crmapplication-all.herokuapp.com/api/user/all';
-    }
-    UserService.prototype.getUser = function (id) {
-        return this.http.get(this._url + "/" + id);
-    };
-    UserService.prototype.createUser = function (user) {
-        return this.http.put("" + this._url + "/new", user);
-    };
-    UserService.prototype.getUsers = function () {
-        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json')
-            .map(function (res) { return res.json(); });
-    };
-    UserService.prototype.updateUser = function (id, user) {
-        return this.http.post("" + this._url + "/update", user);
-    };
-    UserService = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
-    ], UserService);
-    return UserService;
-}());
-
-//# sourceMappingURL=userService.js.map
-
-/***/ }),
-
-/***/ 367:
+/***/ 366:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(368);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(372);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(367);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(371);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -410,7 +379,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 372:
+/***/ 371:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -418,26 +387,26 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(714);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__ = __webpack_require__(366);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_about_about__ = __webpack_require__(216);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_contact_contact__ = __webpack_require__(715);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_home_home__ = __webpack_require__(217);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(713);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_about_about__ = __webpack_require__(218);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_contact_contact__ = __webpack_require__(714);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_home_home__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_tabs_tabs__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(365);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_login_login__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_register_register__ = __webpack_require__(158);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_notifications_notifications__ = __webpack_require__(218);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_status_bar__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_splash_screen__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_login_login__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_register_register__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_notifications_notifications__ = __webpack_require__(715);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_storage__ = __webpack_require__(716);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_facebook__ = __webpack_require__(135);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_angularfire2__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_facebook__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_angularfire2__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__environments_environment__ = __webpack_require__(720);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__api_userService__ = __webpack_require__(225);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__api_userService__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__pages_gallary_gallary__ = __webpack_require__(721);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_friends_friend__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_friends_friend__ = __webpack_require__(320);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__angular_forms__ = __webpack_require__(25);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -498,8 +467,8 @@ var AppModule = (function () {
                     autoFocusAssist: false
                 }, {
                     links: [
-                        { loadChildren: '../pages/login/login.module#LoginPageModule', name: 'LoginPage', segment: 'login', priority: 'low', defaultHistory: [] },
-                        { loadChildren: '../pages/register/register.module#RegisterPageModule', name: 'RegisterPage', segment: 'register', priority: 'low', defaultHistory: [] }
+                        { loadChildren: '../pages/register/register.module#RegisterPageModule', name: 'RegisterPage', segment: 'register', priority: 'low', defaultHistory: [] },
+                        { loadChildren: '../pages/login/login.module#LoginPageModule', name: 'LoginPage', segment: 'login', priority: 'low', defaultHistory: [] }
                     ]
                 }), __WEBPACK_IMPORTED_MODULE_15__ionic_storage__["a" /* IonicStorageModule */].forRoot({
                     name: '__ionic3_start_theme',
@@ -542,9 +511,9 @@ var AppModule = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__about_about__ = __webpack_require__(216);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_home__ = __webpack_require__(217);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__friends_friend__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__about_about__ = __webpack_require__(218);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_home__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__friends_friend__ = __webpack_require__(320);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -576,19 +545,19 @@ var TabsPage = (function () {
 
 /***/ }),
 
-/***/ 714:
+/***/ 713:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(365);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__ = __webpack_require__(365);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_tabs_tabs__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_login_login__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_login_login__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__ = __webpack_require__(81);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -609,7 +578,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, keyboard, facebook) {
         this.facebook = facebook;
-        this.isLoggedIn = false;
         this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_login_login__["a" /* LoginPage */];
         platform.ready().then(function () {
             // Okay, so the platform is ready and our plugins are available.
@@ -624,7 +592,7 @@ var MyApp = (function () {
         this.nav.setRoot(page.component);
     };
     MyApp.prototype.goHome = function () {
-        this.nav.push(__WEBPACK_IMPORTED_MODULE_5__pages_tabs_tabs__["a" /* TabsPage */]);
+        this.nav.setRoot(__WEBPACK_IMPORTED_MODULE_5__pages_tabs_tabs__["a" /* TabsPage */]);
     };
     MyApp.prototype.logout = function () {
         this.facebook.logout();
@@ -635,12 +603,13 @@ var MyApp = (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\app\app.html"*/'<ion-menu [content]="content">\n    <ion-header>\n        <ion-toolbar>\n            <ion-title>App 4 Entertainment</ion-title>\n        </ion-toolbar>\n    </ion-header>\n    <ion-content>\n        <ion-list>\n            <ion-list-header>Item List</ion-list-header>\n            <button menuClose ion-item (click)="goHome()">Home</button>\n            <button menuClose ion-item (click)="logout()">Logout</button>\n        </ion-list>\n    </ion-content>\n</ion-menu>\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\app\app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\app\app.html"*/'<ion-menu [content]="content">\n    <ion-header>\n        <ion-toolbar>\n            <ion-title>App 4 Entertainment</ion-title>\n        </ion-toolbar>\n    </ion-header>\n    <ion-content>\n        <ion-list>\n            <ion-list-header>EXPLORE</ion-list-header>\n            <button menuClose ion-item (click)="goHome()">Home</button>\n            <button menuClose ion-item (click)="logout()">Logout</button>\n        </ion-list>\n    </ion-content>\n</ion-menu>\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\app\app.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */],
             __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */],
             __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */],
-            __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__["a" /* Keyboard */], __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__["a" /* Facebook */]])
+            __WEBPACK_IMPORTED_MODULE_4__ionic_native_keyboard__["a" /* Keyboard */],
+            __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__["a" /* Facebook */]])
     ], MyApp);
     return MyApp;
 }());
@@ -649,7 +618,7 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 715:
+/***/ 714:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -681,6 +650,97 @@ var ContactPage = (function () {
 }());
 
 //# sourceMappingURL=contact.js.map
+
+/***/ }),
+
+/***/ 715:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NotificationsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var NotificationsPage = (function () {
+    function NotificationsPage(viewCtrl) {
+        this.viewCtrl = viewCtrl;
+    }
+    NotificationsPage.prototype.close = function () {
+        this.viewCtrl.dismiss();
+    };
+    NotificationsPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-notifications',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\notifications\notifications.html"*/'<ion-list class="no-margin">\n  <ion-list-header class="no-margin">\n  	<ion-icon name="notifications" color="primary"></ion-icon>\n  	<span ion-text color="primary" class="bold">Notifications</span>\n  </ion-list-header>\n  <button ion-item color="secondary" class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail"></ion-icon>\n  	New booking success!\n  </button>\n  <button ion-item color="secondary" class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail"></ion-icon>\n  	Activity rescheduled\n  </button>\n  <button ion-item class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail-open" color="secondary"></ion-icon>\n  	<span ion-text color="secondary">Activity rescheduled</span>\n  </button>\n  <button ion-item class="text-1x" tappable (click)="close()">\n  	<ion-icon name="mail-open" color="secondary"></ion-icon>\n  	<span ion-text color="secondary">Activity rescheduled</span>\n  </button>\n</ion-list>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\notifications\notifications.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ViewController */]])
+    ], NotificationsPage);
+    return NotificationsPage;
+}());
+
+//# sourceMappingURL=notifications.js.map
+
+/***/ }),
+
+/***/ 72:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__(411);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(265);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var UserService = (function () {
+    function UserService(http) {
+        this.http = http;
+        this._url = 'https://crmapplication-all.herokuapp.com/api/user';
+    }
+    UserService.prototype.getUser = function (id) {
+        return this.http.get(this._url + "/" + id);
+    };
+    UserService.prototype.createUser = function (user) {
+        return this.http.put("" + this._url + "/new", user);
+    };
+    UserService.prototype.getUsers = function () {
+        return this.http.get("" + this._url + "/all")
+            .map(function (res) { return res.json(); });
+    };
+    UserService.prototype.updateUser = function (user) {
+        return this.http.post("" + this._url + "/update", user);
+    };
+    UserService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
+    ], UserService);
+    return UserService;
+}());
+
+//# sourceMappingURL=userService.js.map
 
 /***/ }),
 
@@ -740,18 +800,18 @@ var GallaryPage = (function () {
 
 /***/ }),
 
-/***/ 85:
+/***/ 87:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__register_register__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__register_register__ = __webpack_require__(160);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__ = __webpack_require__(135);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase_app__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase_app__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_firebase_app__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -823,7 +883,6 @@ var LoginPage = (function () {
     LoginPage.prototype.facebookLogin = function () {
         var _this = this;
         if (this.platform.is('cordova')) {
-            console.log('ifffffff');
             return this.facebook.login(['email', 'public_profile']).then(function (res) {
                 var facebookCredential = __WEBPACK_IMPORTED_MODULE_6_firebase_app__["auth"].FacebookAuthProvider.credential(res.authResponse.accessToken);
                 var facenbookInfo = __WEBPACK_IMPORTED_MODULE_6_firebase_app__["auth"]().signInWithCredential(facebookCredential);
@@ -832,7 +891,6 @@ var LoginPage = (function () {
             });
         }
         else {
-            console.log('elseeeee');
             return this.afAuth.auth
                 .signInWithPopup(new __WEBPACK_IMPORTED_MODULE_6_firebase_app__["auth"].FacebookAuthProvider())
                 .then(function (res) {
@@ -913,7 +971,7 @@ var LoginPage = (function () {
     };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-login',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\login\login.html"*/'<!-- -->\n<ion-content padding class="animated fadeIn login auth-page">\n  <div class="login-content">\n\n    <!-- Logo -->\n    <div padding-horizontal text-center class="animated fadeInDown">\n      <div class="logo"></div>\n      <h2 ion-text class="text-primary">\n        <strong>App</strong> 4 Entertainment\n      </h2>\n    </div>\n\n    <!-- Login form -->\n    <form class="list-form">\n      <ion-item>\n        <ion-label floating>\n          <ion-icon name="mail" item-start class="text-primary"></ion-icon>\n          Email\n        </ion-label>\n        <ion-input type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}" ></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label floating>\n          <ion-icon name="lock" item-start class="text-primary" ></ion-icon>\n          Password\n        </ion-label>\n        <ion-input type="password" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}"></ion-input>\n\n      </ion-item>\n    </form>\n\n    <!--<p text-right ion-text color="secondary" tappable (click)="forgotPass()"><strong>Forgot Password?</strong></p>-->\n\n    <div>\n      <button ion-button icon-start block color="dark" tappable (click)="login(user)">\n        <ion-icon name="log-in"></ion-icon>\n        SIGN IN\n      </button>\n\n      <p text-center ion-text color="secondary">Or Sign in with:</p>\n\n      <ion-grid>\n        <ion-row>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-facebook" (click)="facebookLogin()">\n              <ion-icon name="logo-facebook"></ion-icon>\n            </button>\n          </ion-col>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-twitter">\n              <ion-icon name="logo-twitter"></ion-icon>\n            </button>\n          </ion-col>\n          <ion-col col-4>\n            <button ion-button icon-only block class="btn-gplus">\n              <ion-icon name="logo-googleplus"></ion-icon>\n            </button>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n\n    </div>\n\n\n    <!-- Other links -->\n    <div text-center margin-top>\n      <span ion-text color="secondary" tappable (click)="register()">New here? <strong>Sign up</strong></span>\n    </div>\n\n  </div>\n</ion-content>\n'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\login\login.html"*/
+            selector: 'page-login',template:/*ion-inline-start:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\login\login.html"*/'<!-- -->\n<ion-content padding class="animated fadeIn login auth-page" item-height="200" item-width="100">\n  <div class="login-content" style="width: 290px;">\n\n    <!-- Logo -->\n    <div padding-horizontal text-center class="animated fadeInDown">\n      <div class="frndz"></div>\n      <h2 ion-text class="text-primary">\n        <strong>KiKiiIiIIiiiIIii</strong>\n      </h2>\n    </div>\n\n\n    <div>\n      <button ion-button icon-only block color="blue" style="text-transform: none; height: 30px;" (click)="facebookLogin()">\n        <ion-icon name="logo-facebook"></ion-icon>Log in with Faceboook\n      </button>\n    </div>\n\n    <div>\n      <p text-center ion-text color="dynamicColor">Or</p>\n    </div>\n    <!-- Login form -->\n    <div >\n    <form class="list-form">\n      <ion-item>\n        <ion-label floating>\n          <!-- <ion-icon name="mail" item-start class="text-primary"></ion-icon>-->\n          Email\n        </ion-label>\n        <ion-input class="form-label-group" type="text" [(ngModel)]="user.mail" [ngModelOptions]="{standalone: true}"></ion-input>\n      </ion-item>\n\n      <ion-item>\n        <ion-label floating>\n          <!-- <ion-icon name="lock" item-start class="text-primary" ></ion-icon>-->\n          Password\n        </ion-label>\n        <ion-input type="password" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}"></ion-input>\n\n      </ion-item>\n    </form>\n  </div>\n\n    <!--<p text-right ion-text color="secondary" tappable (click)="forgotPass()"><strong>Forgot Password?</strong></p>-->\n\n    <div>\n      <button ion-button icon-start block color="blue" style="text-transform: none; height: 30px;" tappable (click)="login(user)">\n        <ion-icon name="log-in"></ion-icon>\n        Log in\n      </button>\n    </div>\n    <!-- Other links -->\n    <div text-center margin-top>\n      <span ion-text color="dark" tappable (click)="register()">Don\'t have an account?\n        <strong>Sign up</strong>\n      </span>\n    </div>\n\n  </div>\n\n\n</ion-content>'/*ion-inline-end:"C:\InSpace\CRM\CRM-mobile-application\CRM-mobile-application\src\pages\login\login.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__["a" /* Facebook */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */],
@@ -931,5 +989,5 @@ var LoginPage = (function () {
 
 /***/ })
 
-},[367]);
+},[366]);
 //# sourceMappingURL=main.js.map

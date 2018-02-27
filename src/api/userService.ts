@@ -7,10 +7,9 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class UserService {
-    private _url = 'https://crmapplication-all.herokuapp.com/api/user/all';
+    private _url = 'https://crmapplication-all.herokuapp.com/api/user';
     constructor(private http: Http) { }
-
-   
+    
     getUser(id: string): Observable<Object> {
         return this.http.get(`${this._url}/${id}`);
     }
@@ -20,13 +19,12 @@ export class UserService {
     }
 
     getUsers(){
-    
-        return this.http.get('https://crmapplication-all.herokuapp.com/api/user/all.json')
+        return this.http.get(`${this._url}` + `/all`,)
         .map((res:Response) => res.json());
     }
   
 
-    updateUser(id: string, user: Object): Observable<Object> {
+    updateUser(user: Object): Observable<Object> {
         return this.http.post(`${this._url}` + `/update`, user);
     }
 

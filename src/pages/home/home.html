@@ -10,18 +10,18 @@
     </ion-toolbar>
   </ion-header>
 <ion-content padding>
-  <h2>{{ info?.displayName }}</h2>
+  <h2>{{ userinfo?.displayName }}</h2>
   <h2>Welcome to Kiki entertainment App!</h2>
   
 <p>Currently, this app is underdevelopment</p>
 <p>we are very happy to join us, just login and we will sent you notification once we are done</p>
 
-<ion-card *ngIf="info">
-  <ion-card-header>{{ info?.displayName }}</ion-card-header>
-  <img style="width:500px;height:600px;" [src]="info?.photoURL" />
+<ion-card *ngIf="userinfo">
+  <ion-card-header>{{ userinfo?.displayName }}</ion-card-header>
+  <img [src]="userinfo?.fullPhoto" alt="Description"/>
   <ion-card-content>
-    <p>Email: {{ info?.email }}</p>
-  </ion-card-content>
+    <p>Email: {{ userinfo?.email }}</p>
+    </ion-card-content>
 </ion-card>
 
 </ion-content>

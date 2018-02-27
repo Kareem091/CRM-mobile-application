@@ -28,10 +28,9 @@ export class FriendsPage  implements OnInit {
   }
 
   getUsers() {
-
     // make variable that create the component
     let loader = this.loadingController.create({
-      content: 'Loading Friends...'
+      content: 'Loading Users...'
       //spinner: 'dots'
     });
       loader.present().then(() => {

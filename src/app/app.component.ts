@@ -40,7 +40,7 @@ export class MyApp {
   }
 
   goHome(){
-    this.nav.push(TabsPage);
+    this.nav.setRoot(TabsPage);
   }
 
   logout() {

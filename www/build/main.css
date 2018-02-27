@@ -25977,11 +25977,11 @@ ion-navbar.no-border .toolbar-background {
 }
 
 .auth-page .scroll-content .login-content .logo {
-  width: 60px;
-  height: 60px;
+  width: 230px;
+  height: 100px;
   margin: 20px auto 0;
   border-radius: 10%;
-  background: url("../assets/img/ionic3-ico.png") no-repeat;
+  background: url("../assets/img/frndz.png") no-repeat;
   background-size: 100%;
 }
 

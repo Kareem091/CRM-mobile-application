@@ -1,7 +1,8 @@
 export interface UserInformation{
     
-        displayName : String;
-        email: String;
+        displayName : string;
+        email: string;
+        password: string;
         phoneNumber: String;
         photoURL: String;
         gender: String;
@@ -10,6 +11,6 @@ export interface UserInformation{
         userType:String;
         providerId:String;
         uid:String;
-        
-      
+        fullPhoto: string;
+
 }
