@@ -7,6 +7,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { HomePage } from "../pages/home/home";
 import { LoginPage } from "../pages/login/login";
 import { Facebook } from '@ionic-native/facebook'
+import { ParamsService } from '../api/ParamService';
 
 @Component({
   templateUrl: 'app.html'

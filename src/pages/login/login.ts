@@ -10,6 +10,7 @@ import * as firebase from 'firebase/app';
 import { auth } from "firebase/app";
 import { UserInformation } from "../../entities/userInformation";
 import { UserService } from "../../api/userService";
+import { ParamsService } from "../../api/ParamService";
 
 @IonicPage()
 @Component({
@@ -20,6 +21,10 @@ export class LoginPage {
 
   loggedIn: boolean = false;
   user = {} as UserInformation;
+  //public params: ParamsService;
+  loggedinUser: UserInformation;
+
+
 
   constructor(
     public facebook: Facebook,
@@ -31,9 +36,11 @@ export class LoginPage {
     public menu: MenuController,
     private userServ: UserService,
     private platform: Platform,
-    public toastCtrl: ToastController) {
+    private param: ParamsService,
+    public toastCtrl: ToastController) 
+    {
     this.menu.swipeEnable(false);
-  }
+    }
 
   // login with facebook and go to home page
   facebookLogin() {
@@ -55,15 +62,24 @@ export class LoginPage {
   }
 
 
+  getLoggedInUser(email: string){
+    console.log('------ loggedinU  ----====email========= '   + email);
+   // this.usersService.getUsers(this.id).subscribe(user => this.user = user);}
+   this.userServ.getUserByEmail(email).subscribe(data =>
+    {console.log(" fine:OK::: "+data);},
+    error => console.log('errrrroooororororo::: '+error));
 
-  
+  }
 
   // login with email and go to home page
   async login(user: UserInformation) {
+    console.log('Login: ')
     try {
       const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       if (result) {
-        this.nav.setRoot(TabsPage);
+        this.getLoggedInUser(user.email);
+        this.param.setLoggedInUser(user);
+        this.nav.push(TabsPage);
       }
     }
     catch (e) {

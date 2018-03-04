@@ -10,25 +10,42 @@ import { UserService } from '../../api/userService';
 import { UserInformation } from '../../entities/userInformation';
 
 import { error } from '@firebase/database/dist/esm/src/core/util/util';
+import { ParamsService } from '../../api/ParamService';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit{
   //fullPhoto = {} as String;
   info = {} as UserData;
   userinfo = {} as UserInformation;
-  constructor(public navCtrl: NavController,public navParam: NavParams,private userServ: UserService) {
+  userinfoServ: UserInformation;
+  constructor(public param:ParamsService, public navCtrl: NavController,public navParam: NavParams,private userServ: UserService) {
 
   }
 
+
+  ngOnInit(){
+    console.log('ngOnInit..........');
+    this.userinfoServ = this.param.getLoggedInUser();
+   
+  }
+
+
   updateUserInfo(userInfo:UserInformation){
-    this.userServ.updateUser(userInfo).subscribe(data =>
-      {console.log(data);},error => console.log(error));
+    this.userServ.updateUser(userInfo.uid,userInfo).subscribe(data => 
+      {console.log(" fine:OK::: "+data);},error => console.log('error::: '+error));
+  }
+
+  ionViewWillEnter(){
+    console.log("Did data load? : ",this.navParam.data.email);
   }
 
   ionViewDidLoad() {
+    console.log('ionViewDidLoad home');
+    console.log(this.navParam.data);
     var user = firebase.auth().currentUser;
     if (user != null) {
       var profileInfo = {} as UserData;
@@ -41,22 +58,24 @@ export class HomePage {
         console.log("  phone Number: " + profile.phoneNumber);
         console.log("  Photo URL: " + profile.photoURL);
         profileInfo = profile;
-        console.log(profileInfo.uid + "-----");
       });
-      this.info = profileInfo;
-     this.transformUserData(this.info);
+      this.info = user;
+      console.log(user.uid);
+      console.log(user.getIdToken);
+
+     this.transformUserData(this.info,user.uid);
     } 
   }
   
 
-  transformUserData(infoUI: UserInfo){
+  transformUserData(infoUI: UserInfo, uid: string){
     this.userinfo.displayName = infoUI.displayName;
     this.userinfo.email = infoUI.email;
     this.userinfo.photoURL = infoUI.photoURL;
-    this.userinfo.phoneNumber = infoUI.phoneNumber;
+    this.userinfo.phoneNumber = "00000929299";
     this.userinfo.providerId = infoUI.providerId;
-    this.userinfo.uid = infoUI.uid;
+    this.userinfo.uid = uid;
     this.userinfo.fullPhoto =  "https://graph.facebook.com/"+infoUI.uid+"/picture?width=1024&height=1024";
-    //this.updateUserInfo(this.userinfo);
+    this.updateUserInfo(this.userinfo);
   }
 }

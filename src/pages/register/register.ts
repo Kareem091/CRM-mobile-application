@@ -13,6 +13,7 @@ import { auth } from "firebase/app";
 import { Platform } from "ionic-angular/platform/platform";
 import { UserInformation } from "../../entities/userInformation";
 import { AlertController } from "ionic-angular/components/alert/alert-controller";
+import { ParamsService } from "../../api/ParamService";
 
 @IonicPage()
 @Component({
@@ -28,6 +29,7 @@ export class RegisterPage {
     private failMsgCtrl: AlertController,
     private afAuth: AngularFireAuth,
     public nav: NavController, 
+    public param:ParamsService,
     public navParams: NavParams, private userServ:UserService) {
   }
 
@@ -40,6 +42,7 @@ export class RegisterPage {
       );
       if (result) {
         this.createNewUser(this.user);
+        this.param.setLoggedInUser(this.user);
         this.nav.push(TabsPage);
       }
     } catch (e) {
@@ -69,6 +72,7 @@ export class RegisterPage {
   login() {
     this.nav.setRoot(LoginPage);
   }
+
   createNewUser(logedInUser: UserInformation){
     this.userServ.createUser(logedInUser).subscribe(data=>{console.log(data);},error => this.presentFailMsg(error))
   }

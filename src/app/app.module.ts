@@ -25,6 +25,7 @@ import { UserService } from '../api/userService';
 import { GallaryPage } from '../pages/gallary/gallary';
 import { FriendsPage } from '../pages/friends/friend';
 import { FormsModule } from '@angular/forms';
+import { ParamsService } from '../api/ParamService';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { FormsModule } from '@angular/forms';
     StatusBar,
     SplashScreen,
     Keyboard,
+    ParamsService,
     Facebook,
     UserService,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
