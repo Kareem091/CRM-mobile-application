@@ -4,50 +4,56 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Keyboard } from '@ionic-native/keyboard';
 import { TabsPage } from '../pages/tabs/tabs';
-import { HomePage } from "../pages/home/home";
 import { LoginPage } from "../pages/login/login";
 import { Facebook } from '@ionic-native/facebook'
-import { ParamsService } from '../api/ParamService';
+import { LoadingController } from 'ionic-angular/components/loading/loading-controller';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
 
- //rootPage:any = TabsPage;
   @ViewChild(Nav) nav: Nav;
-  rootPage:any = LoginPage;
+  rootPage: any = LoginPage;
 
   constructor(
-     platform: Platform,
-     statusBar: StatusBar, 
-     splashScreen: SplashScreen, 
-     keyboard: Keyboard, 
-     private facebook: Facebook,
-     ) 
-     {
+    private loadingController: LoadingController,
+    platform: Platform,
+    statusBar: StatusBar,
+    splashScreen: SplashScreen,
+    keyboard: Keyboard,
+    private facebook: Facebook) {
+
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
     });
+
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
 
-  goHome(){
+  goHome() {
     this.nav.setRoot(TabsPage);
   }
 
   logout() {
-    this.facebook.logout();
-      this.nav.push(LoginPage);
+    this.presentLoadingDefault();
   }
 
+  presentLoadingDefault() {
+    let loading = this.loadingController.create({
+      spinner: 'dots',
+      content: 'Bye..'
 
+    });
+    loading.present();
+    setTimeout(() => {
+      loading.dismiss();
+      this.facebook.logout();
+      this.nav.push(LoginPage);
+    }, 3000);
+
+  }
 }

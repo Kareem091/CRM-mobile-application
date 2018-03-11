@@ -11,18 +11,19 @@
   </ion-header>
 <ion-content padding>
     <div class="login-content" >
-  <h2>{{ userinfo?.displayName }}</h2>
+  <h2>{{ user?.displayName }}</h2>
   <h2>Welcome to Kiki entertainment App!</h2>
   
 <p>Currently, this app is underdevelopment</p>
 <p>we are very happy to join us, just login and we will sent you notification once we are done</p>
 
-<ion-card *ngIf="userinfo">
-  <ion-card-header>{{ userinfo?.displayName }}</ion-card-header>
-  <img [src]="userinfo?.fullPhoto" alt="Description"/>
+<ion-card *ngIf="user">
+  <ion-card-header>{{ user?.displayName }}</ion-card-header>
+  <img [src]="user?.fullPhoto" alt="Description"/>
   <ion-card-content>
-    <p>Email: {{ userinfo?.email }}</p>
+    <p>Email: {{ user?.email }}</p>
     </ion-card-content>
 </ion-card>
 </div>
+
 </ion-content>

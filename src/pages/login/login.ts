@@ -2,15 +2,15 @@ import { Component } from "@angular/core";
 import { NavController, AlertController, ToastController, MenuController, IonicPage, Platform } from "ionic-angular";
 import { RegisterPage } from "../register/register";
 import { TabsPage } from "../tabs/tabs";
-import { User } from "../../entities/user";
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook'
-//import firebase from 'firebase';
 import * as firebase from 'firebase/app';
-import { auth } from "firebase/app";
 import { UserInformation } from "../../entities/userInformation";
 import { UserService } from "../../api/userService";
 import { ParamsService } from "../../api/ParamService";
+import { LoadingController } from "ionic-angular/components/loading/loading-controller";
+import { UserInfo } from "@firebase/auth-types";
+import { UserData } from "../../entities/userData";
 
 @IonicPage()
 @Component({
@@ -19,16 +19,12 @@ import { ParamsService } from "../../api/ParamService";
 })
 export class LoginPage {
 
-  loggedIn: boolean = false;
-  user = {} as UserInformation;
-  //public params: ParamsService;
-  loggedinUser: UserInformation;
-
+  public user = {} as UserInformation;
+  info = {} as UserData;
 
 
   constructor(
     public facebook: Facebook,
-    private alertCtrl: AlertController,
     private failMsgCtrl: AlertController,
     private afAuth: AngularFireAuth,
     public nav: NavController,
@@ -36,40 +32,40 @@ export class LoginPage {
     public menu: MenuController,
     private userServ: UserService,
     private platform: Platform,
+    public loadingCtrl: LoadingController,
     private param: ParamsService,
-    public toastCtrl: ToastController) 
-    {
+    public toastCtrl: ToastController) {
     this.menu.swipeEnable(false);
-    }
+
+  }
 
   // login with facebook and go to home page
-  facebookLogin() {
-    if (this.platform.is('cordova')) {
-      return this.facebook.login(['email', 'public_profile']).then(res => {
-        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
-        const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
-        console.log(facenbookInfo);
-        this.nav.setRoot(TabsPage);
-      })
-    }
-    else {
-      return this.afAuth.auth
-        .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-        .then(res => {
-          this.nav.push(TabsPage)
-        });
+  async facebookLogin() {
+    try {
+      if (this.platform.is('cordova')) {
+        const result = await this.facebook.login(['email', 'public_profile']).then(res => {
+          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
+          const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
+          console.log(facenbookInfo);
+          if (result) {
+            this.getFacebookLoggedInUser();
+            this.storeLoggedInUser(this.user.email);
+          }
+        })
+      }
+      else {
+        const result = await this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+        if (result) {
+          this.getFacebookLoggedInUser();
+          this.storeLoggedInUser(this.user.email);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      this.presentFailMsg(e);
     }
   }
 
-
-  getLoggedInUser(email: string){
-    console.log('------ loggedinU  ----====email========= '   + email);
-   // this.usersService.getUsers(this.id).subscribe(user => this.user = user);}
-   this.userServ.getUserByEmail(email).subscribe(data =>
-    {console.log(" fine:OK::: "+data);},
-    error => console.log('errrrroooororororo::: '+error));
-
-  }
 
   // login with email and go to home page
   async login(user: UserInformation) {
@@ -77,15 +73,63 @@ export class LoginPage {
     try {
       const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       if (result) {
-        this.getLoggedInUser(user.email);
-        this.param.setLoggedInUser(user);
-        this.nav.push(TabsPage);
+        this.storeLoggedInUser(user.email);
       }
     }
     catch (e) {
       console.error(e);
       this.presentFailMsg(e);
     }
+  }
+
+  getFacebookLoggedInUser() {
+    var user = firebase.auth().currentUser;
+    if (user != null) {
+      var profileInfo = {} as UserData;
+      console.log("---user.uid; " + user.providerData)
+      user.providerData.forEach(function (profile) {
+        profileInfo = profile;
+      });
+      this.info = user;
+      this.transformUserData(this.info, profileInfo.uid);
+    }
+  }
+
+  transformUserData(infoUI: UserInfo, uid: string) {
+    this.user.displayName = infoUI.displayName;
+    this.user.email = infoUI.email;
+    this.user.photoURL = infoUI.photoURL;
+    this.user.phoneNumber = infoUI.phoneNumber;
+    this.user.providerId = infoUI.providerId;
+    this.user.uid = uid;
+    this.user.fullPhoto = "https://graph.facebook.com/" + uid + "/picture?width=1024&height=1024";
+  }
+
+  storeLoggedInUser(email: string) {
+    console.log('storeLoggedInUser:: ' + email);
+    this.userServ.getUserByEmail(email).subscribe((data: UserInformation) => {
+      if (data) {
+        this.user = data;
+        this.param.setLoggedInUser(this.user);
+      } else {
+        console.log(`User with email '${email}' not found, returning to list`);
+      }
+    });
+    this.presentLoadingDefault();
+  }
+
+  presentLoadingDefault() {
+    let loading = this.loadingCtrl.create({
+      spinner: 'dots',
+      content: 'Hello'
+
+    });
+    loading.present();
+    setTimeout(() => {
+      loading.dismiss();
+      this.nav.setRoot(TabsPage);
+    }, 5000);
+
   }
 
   // go to register page
@@ -130,7 +174,7 @@ export class LoginPage {
                 showCloseButton: true
               });
               toast.present();
-            }).catch( (error) => this.presentFailMsg(error) );
+            }).catch((error) => this.presentFailMsg(error));
           }
         }
       ]
@@ -147,5 +191,5 @@ export class LoginPage {
     });
     alert.present();
   }
-  
+
 }

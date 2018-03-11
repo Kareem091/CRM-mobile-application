@@ -6,7 +6,7 @@ export interface UserInformation{
         phoneNumber: String;
         photoURL: String;
         gender: String;
-        about:String;
+        about:string;
         nickName: String;
         userType:String;
         providerId:String;

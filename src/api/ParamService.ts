@@ -5,15 +5,32 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class ParamsService{
 
-    userinfoServ: UserInformation;
+   // userinfoServ: any;
+    id:string;
+    public userinfoServ = {} as UserInformation;
 
-    setLoggedInUser(userinfoServ: UserInformation){
-        console.log('setUser: '+userinfoServ);
+    constructor(){}
+
+    setLoggedInUser(userinfoServ: any){
+        console.log('setUser: ' + userinfoServ.email);
         this.userinfoServ = userinfoServ;
+        console.log('setUser this : ' + this.userinfoServ.email);
       }
 
-      getLoggedInUser(): UserInformation{
-        console.log('getUser: '+this.userinfoServ);
+      getLoggedInUser(): any{
+        console.log('getUser email gettter: '+this.userinfoServ.email);
+        console.log('getUser id gettter: '+this.userinfoServ.id);
+        console.log('getUser about gettter: '+this.userinfoServ.about);
         return this.userinfoServ;
+      }
+
+      setId(id:string){
+        console.log(' PARAM:  id:   ' + id);
+        this.id=id;
+      }
+
+      getId(): string{
+        console.log(' PARAM: this id:   ' + this.id);
+        return this.id;
       }
 }

@@ -14,6 +14,9 @@ import { Platform } from "ionic-angular/platform/platform";
 import { UserInformation } from "../../entities/userInformation";
 import { AlertController } from "ionic-angular/components/alert/alert-controller";
 import { ParamsService } from "../../api/ParamService";
+import { LoadingController } from "ionic-angular/components/loading/loading-controller";
+import { UserData } from "../../entities/userData";
+import { UserInfo } from "@firebase/auth-types";
 
 @IonicPage()
 @Component({
@@ -21,7 +24,8 @@ import { ParamsService } from "../../api/ParamService";
   templateUrl: 'register.html'
 })
 export class RegisterPage {
-  user = {} as UserInformation;
+  public user = {} as UserInformation;
+  info = {} as UserData;
 
   constructor(
     private platform: Platform,
@@ -29,6 +33,7 @@ export class RegisterPage {
     private failMsgCtrl: AlertController,
     private afAuth: AngularFireAuth,
     public nav: NavController, 
+    public loadingCtrl: LoadingController,
     public param:ParamsService,
     public navParams: NavParams, private userServ:UserService) {
   }
@@ -42,8 +47,7 @@ export class RegisterPage {
       );
       if (result) {
         this.createNewUser(this.user);
-        this.param.setLoggedInUser(this.user);
-        this.nav.push(TabsPage);
+        this.storeLoggedInUser(this.user.email);
       }
     } catch (e) {
       console.error(e);
@@ -52,25 +56,84 @@ export class RegisterPage {
   }
 
   // login with facebook and go to home page
-  facebookLogin() {
-    if (this.platform.is('cordova')) {
-      return this.facebook.login(['email', 'public_profile']).then(res => {
-        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
-        const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
-        console.log(facenbookInfo);
-        this.nav.setRoot(TabsPage);
-      })
+  async facebookLogin() {
+    try {
+      if (this.platform.is('cordova')) {
+        const result = await this.facebook.login(['email', 'public_profile']).then(res => {
+          const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
+          const facenbookInfo = firebase.auth().signInWithCredential(facebookCredential);
+          console.log(facenbookInfo);
+          if (result) {
+            this.getFacebookLoggedInUser();
+            this.storeLoggedInUser(this.user.email);
+          }
+        })
+      }
+      else {
+        const result = await this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+        if (result) {
+          this.getFacebookLoggedInUser();
+          this.storeLoggedInUser(this.user.email);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      this.presentFailMsg(e);
     }
-    else {
-      return this.afAuth.auth
-        .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-        .then(res => {
-          this.nav.push(TabsPage)});
-    } 
   }
+  
   // go to login page
   login() {
     this.nav.setRoot(LoginPage);
+  }
+
+  getFacebookLoggedInUser() {
+    var user = firebase.auth().currentUser;
+    if (user != null) {
+      var profileInfo = {} as UserData;
+      user.providerData.forEach(function (profile) {
+        profileInfo = profile;
+      });
+      this.info = user;
+      this.transformUserData(this.info, profileInfo.uid);
+    }
+  }
+
+  transformUserData(infoUI: UserInfo, uid: string) {
+    this.user.displayName = infoUI.displayName;
+    this.user.email = infoUI.email;
+    this.user.photoURL = infoUI.photoURL;
+    this.user.phoneNumber = infoUI.phoneNumber;
+    this.user.providerId = infoUI.providerId;
+    this.user.uid = uid;
+    this.user.fullPhoto = "https://graph.facebook.com/" + uid + "/picture?width=1024&height=1024";
+  }
+
+  storeLoggedInUser(email: string) {
+    console.log('storeLoggedInUser:: ' + email);
+    this.userServ.getUserByEmail(email).subscribe((data: UserInformation) => {
+      if (data) {
+        this.user = data;
+        this.param.setLoggedInUser(this.user);
+      } else {
+        console.log(`User with email '${email}' not found, returning to list`);
+      }
+    });
+    this.presentLoadingDefault();
+  }
+
+  presentLoadingDefault() {
+    let loading = this.loadingCtrl.create({
+      spinner: 'dots',
+      content: 'Hello'
+
+    });
+    loading.present();
+    setTimeout(() => {
+      loading.dismiss();
+      this.nav.setRoot(TabsPage);
+    }, 5000);
+
   }
 
   createNewUser(logedInUser: UserInformation){

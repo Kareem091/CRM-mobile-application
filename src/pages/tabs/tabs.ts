@@ -9,6 +9,7 @@ import { FriendsPage } from '../friends/friend';
 import { NavParams } from 'ionic-angular/navigation/nav-params';
 import { UserInformation } from '../../entities/userInformation';
 import { NavController } from 'ionic-angular/navigation/nav-controller';
+import { ParamsService } from '../../api/ParamService';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -19,7 +20,8 @@ export class TabsPage {
   tab2Root = AboutPage;
   tab3Root = FriendsPage;
 
-  constructor(public params: NavParams) {
+  constructor(public param:ParamsService) {
     
   }
+
 }

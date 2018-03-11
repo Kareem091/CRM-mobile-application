@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Keyboard } from '@ionic-native/keyboard';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http'
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
@@ -15,17 +15,15 @@ import { RegisterPage } from "../pages/register/register";
 import { NotificationsPage } from '../pages/notifications/notifications';
 import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
-import { IonicPageModule } from 'ionic-angular/module';
-import { LoginPageModule } from '../pages/login/login.module';
 import { UserService } from '../api/userService';
 import { GallaryPage } from '../pages/gallary/gallary';
 import { FriendsPage } from '../pages/friends/friend';
 import { FormsModule } from '@angular/forms';
 import { ParamsService } from '../api/ParamService';
+import { NavController } from 'ionic-angular/navigation/nav-controller';
 
 @NgModule({
   declarations: [
@@ -43,7 +41,7 @@ import { ParamsService } from '../api/ParamService';
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
