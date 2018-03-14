@@ -18,16 +18,12 @@ import { LoadingController } from 'ionic-angular/components/loading/loading-cont
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage implements OnInit {
+export class HomePage  {
   user = {} as UserInformation;
-
   constructor(public param: ParamsService, public navCtrl: NavController, private userServ: UserService, private loadingController: LoadingController) {
-  }
-
-  ngOnInit() {
     this.user = this.param.getLoggedInUser();
-  }
+    this.user.fullPhoto = this.param.getFullPhoto();
+    console.log('fullPhone------------- ' + this.user.fullPhoto);
 
-  ionViewDidLoad() {
   }
 }

@@ -3,34 +3,37 @@ import { UserInformation } from "../entities/userInformation";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
-export class ParamsService{
+export class ParamsService {
 
-   // userinfoServ: any;
-    id:string;
-    public userinfoServ = {} as UserInformation;
+  // userinfoServ: any;
+  fullPhoto: string;
+  public userinfoServ = {} as UserInformation;
 
-    constructor(){}
+  constructor() { }
 
-    setLoggedInUser(userinfoServ: any){
-        console.log('setUser: ' + userinfoServ.email);
-        this.userinfoServ = userinfoServ;
-        console.log('setUser this : ' + this.userinfoServ.email);
-      }
+  setLoggedInUser(userinfoServ: any) {
+    console.log('setUser: ' + userinfoServ.email);
+    this.userinfoServ = userinfoServ;
+    console.log('setUser this : ' + this.userinfoServ.email);
+    console.log('setUser about gettter: ' + this.userinfoServ.fullPhoto);
 
-      getLoggedInUser(): any{
-        console.log('getUser email gettter: '+this.userinfoServ.email);
-        console.log('getUser id gettter: '+this.userinfoServ.id);
-        console.log('getUser about gettter: '+this.userinfoServ.about);
-        return this.userinfoServ;
-      }
+  }
 
-      setId(id:string){
-        console.log(' PARAM:  id:   ' + id);
-        this.id=id;
-      }
+  getLoggedInUser(): any {
+    console.log('getUser email gettter: ' + this.userinfoServ.email);
+    console.log('getUser id gettter: ' + this.userinfoServ.id);
+    console.log('getUser about gettter: ' + this.userinfoServ.about);
+    console.log('getUser about gettter: ' + this.userinfoServ.fullPhoto);
+    return this.userinfoServ;
+  }
 
-      getId(): string{
-        console.log(' PARAM: this id:   ' + this.id);
-        return this.id;
-      }
+  setFullPhoto(fullPhoto: string) {
+    console.log(' PARAM:  fullPhoto:   ' + fullPhoto);
+    this.fullPhoto = fullPhoto;
+  }
+
+  getFullPhoto(): string {
+    console.log(' PARAM: this fullPhoto:   ' + this.fullPhoto);
+    return this.fullPhoto;
+  }
 }

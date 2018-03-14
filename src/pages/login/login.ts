@@ -86,7 +86,6 @@ export class LoginPage {
     var user = firebase.auth().currentUser;
     if (user != null) {
       var profileInfo = {} as UserData;
-      console.log("---user.uid; " + user.providerData)
       user.providerData.forEach(function (profile) {
         profileInfo = profile;
       });
@@ -96,13 +95,15 @@ export class LoginPage {
   }
 
   transformUserData(infoUI: UserInfo, uid: string) {
+    console.log('uid::::::--- ' + uid);
     this.user.displayName = infoUI.displayName;
     this.user.email = infoUI.email;
     this.user.photoURL = infoUI.photoURL;
     this.user.phoneNumber = infoUI.phoneNumber;
     this.user.providerId = infoUI.providerId;
     this.user.uid = uid;
-    this.user.fullPhoto = "https://graph.facebook.com/" + uid + "/picture?width=1024&height=1024";
+    this.param.setFullPhoto("https://graph.facebook.com/" + uid + "/picture?width=1024&height=1024");
+   // this.user.fullPhoto = "https://graph.facebook.com/" + uid + "/picture?width=1024&height=1024";
   }
 
   storeLoggedInUser(email: string) {

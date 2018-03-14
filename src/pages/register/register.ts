@@ -52,6 +52,7 @@ export class RegisterPage {
     } catch (e) {
       console.error(e);
       this.presentFailMsg(e);
+      this.nav.pop();
     }
   }
 
