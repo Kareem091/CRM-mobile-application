@@ -24,6 +24,5 @@ export class HomePage  {
     this.user = this.param.getLoggedInUser();
     this.user.fullPhoto = this.param.getFullPhoto();
     console.log('fullPhone------------- ' + this.user.fullPhoto);
-
   }
 }

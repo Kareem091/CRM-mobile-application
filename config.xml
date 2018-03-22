@@ -82,7 +82,7 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-facebook4" spec="^1.9.1">
-        <variable name="APP_ID" value="154746568495793" />
+        <variable name="APP_ID" value="170571743596930" />
         <variable name="APP_NAME" value="crm-mobile-app" />
     </plugin>
     <engine name="android" spec="7.0.0" />

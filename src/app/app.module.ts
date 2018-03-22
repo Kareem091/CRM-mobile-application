@@ -4,7 +4,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Keyboard } from '@ionic-native/keyboard';
 import { HttpClientModule } from '@angular/common/http'
-import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -24,11 +23,12 @@ import { FriendsPage } from '../pages/friends/friend';
 import { FormsModule } from '@angular/forms';
 import { ParamsService } from '../api/ParamService';
 import { NavController } from 'ionic-angular/navigation/nav-controller';
+import { ProfilePage } from '../pages/profile/profile';
 
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
+    ProfilePage,
     ContactPage,
     GallaryPage,
     HomePage,
@@ -57,7 +57,7 @@ import { NavController } from 'ionic-angular/navigation/nav-controller';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
+    ProfilePage,
     ContactPage,
     HomePage,
     GallaryPage,

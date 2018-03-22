@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+      <ion-title>{{title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>This column will take 12 columns
+          <ion-icon name="heart"></ion-icon>
+
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>This column will take 6 columns
+
+          <ion-icon ios="logo-apple" md="logo-android"></ion-icon>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+
+
+  <!-- Segment buttons with text -->
+  <ion-segment color="primary" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="Gallery" checked>
+      Gallery
+    </ion-segment-button>
+    <ion-segment-button value="News">
+      News
+    </ion-segment-button>
+    <ion-segment-button value="Videos">
+      Videos
+    </ion-segment-button>
+
+  </ion-segment>
+
+
+  <div *ngIf="relationship ==='Gallery'"> 
+    <ion-slides class="image-slider" loop="true" slidesPerView="2">
+      <ion-slide *ngFor="let img of images">
+        <img src="assets/img/{{img}}" class="thumb-img" imageViewer/>
+      </ion-slide>
+    </ion-slides></div>
+  <div *ngIf="relationship ==='News'"> latest Posts </div>
+  <div *ngIf="relationship ==='Videos'"> Lastest Videos </div>
+
+</ion-content>

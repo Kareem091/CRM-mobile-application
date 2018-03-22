@@ -26205,3 +26205,15 @@ ion-icon[ng-reflect-disabled="true"] {
   -webkit-animation-name: fadeInDown;
   animation-name: fadeInDown;
 }
+
+profile-about ion-slide.swiper-slide {
+  left: 25%;
+}
+
+profile-about .slide-zoom {
+  background: #e6e6e6;
+}
+
+profile-about .thumb-img {
+  padding: 5px;
+}

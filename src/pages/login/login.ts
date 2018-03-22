@@ -17,6 +17,7 @@ import { UserData } from "../../entities/userData";
   selector: 'page-login',
   templateUrl: 'login.html'
 })
+
 export class LoginPage {
 
   public user = {} as UserInformation;
@@ -41,6 +42,11 @@ export class LoginPage {
 
   // login with facebook and go to home page
   async facebookLogin() {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_birthday');
+    provider.setCustomParameters({
+      'display': 'popup'
+    });
     try {
       if (this.platform.is('cordova')) {
         const result = await this.facebook.login(['email', 'public_profile']).then(res => {
@@ -54,15 +60,33 @@ export class LoginPage {
         })
       }
       else {
-        const result = await this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+        /* firebase.auth().signInWithPopup(provider).then(function(result) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+          // ...
+        }).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+          console.log(credential)
+        });
+        */
+       const result = await this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
         if (result) {
           this.getFacebookLoggedInUser();
           this.storeLoggedInUser(this.user.email);
         }
       }
     } catch (e) {
-      console.error(e);
-      this.presentFailMsg(e);
+      console.error(e.message);
+      this.presentFailMsg(e.message);
     }
   }
 
